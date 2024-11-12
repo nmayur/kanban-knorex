@@ -1,5 +1,5 @@
 export const initialTasks = [
-    { userId: 1, id: 1, title: "Finish the project report", completed: false, inProgress: true, description: "Compile the final details and format the report for review." },
+    { userId: 1, id: 1, title: "Finish the project report", completed: false, inProgress: false, description: "Compile the final details and format the report for review." },
     { userId: 1, id: 2, title: "Prepare for the team meeting", completed: false, inProgress: false, description: "Gather the agenda items and prepare a presentation for the discussion." },
     { userId: 1, id: 3, title: "Respond to client emails", completed: false, inProgress: true, description: "Reply to the most urgent emails and follow up with clients on pending issues." },
     { userId: 1, id: 4, title: "Fix bugs in the app", completed: true, inProgress: false, description: "Address critical bugs reported by users in the latest app version." },

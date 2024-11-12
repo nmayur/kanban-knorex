@@ -13,6 +13,7 @@ export default function Home() {
     const fetchTasks = async () => {
       try {
         const response = await fetch("/api/tasks");
+
         const data = await response.json();
         setTasks(data);
       } catch (error) {
@@ -23,11 +24,19 @@ export default function Home() {
     fetchTasks();
   }, []);
 
+  const updateTaskStatus = (task: Task) => {
+    const updatedTasks = tasks.map(t => 
+      t.id === task.id ? { ...t, ...task } : t
+    );
+    setTasks(updatedTasks);
+    console.log("Task updated:", updatedTasks);
+  };
+
   return (
     <div>
       <div className="lg:container mx-auto p-4">
         <h1 className="text-2xl font-bold mb-6">Kanban Board</h1>
-        <Board initialTasks={tasks} />
+        <Board tasks={tasks} updateTaskStatus={updateTaskStatus} />
       </div>
     </div>
   );

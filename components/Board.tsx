@@ -4,15 +4,11 @@ import Column from './Column';
 import { Task, ColumnType } from '@/shared/types';
 
 interface BoardProps {
-  initialTasks: Task[];
+  tasks: Task[];
+  updateTaskStatus: (task:Task ) => void
 }
 
-const Board: React.FC<BoardProps> = ({ initialTasks }) => {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
-
-  useEffect(() => {
-    setTasks(initialTasks);
-  }, [initialTasks]);
+const Board: React.FC<BoardProps> = ({ tasks, updateTaskStatus }) => {
 
   // Function to get tasks based on their column status
   const getTasksByColumn = (columnId: ColumnType) => {
@@ -27,16 +23,17 @@ const Board: React.FC<BoardProps> = ({ initialTasks }) => {
 
   // Handle the drag and drop logic
   const onDragEnd = async (result: DropResult) => {
-    const { source, destination } = result;
-    if (!destination) return; 
-
+    const { source, destination, draggableId } = result;
+    if (!destination) return;
     if (source.droppableId === destination.droppableId && source.index === destination.index) {
       return;
     }
-
-    const updatedTasks = [...tasks];
-    const [movedTask] = updatedTasks.splice(source.index, 1);
-
+  
+    // Find the task that was dragged
+    const movedTask = tasks.find(task => task.id === Number(draggableId));
+  
+    if (!movedTask) return;
+  
     let newStatus: 'completed' | 'inProgress' | 'todo' = 'todo';
     if (destination.droppableId === 'completed') {
       newStatus = 'completed';
@@ -51,26 +48,9 @@ const Board: React.FC<BoardProps> = ({ initialTasks }) => {
       movedTask.inProgress = false;
       movedTask.completed = false;
     }
-
-    try {
-      const response = await fetch(`/api/tasks/${movedTask.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
-
-      if (response.ok) {
-        const updatedTask = await response.json();
-        updatedTasks.splice(destination.index, 0, updatedTask.task);
-        setTasks(updatedTasks); 
-      } else {
-        console.error('Error updating task status');
-      }
-    } catch (error) {
-      console.error('Error in API request:', error);
-    }
+  
+    // Pass updated task to the parent to update the state
+    updateTaskStatus(movedTask);
   };
 
   return (
