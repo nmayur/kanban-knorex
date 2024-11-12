@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import Column from './Column';
 import { Task, ColumnType } from '@/shared/types';
 
 interface BoardProps {
   tasks: Task[];
-  setTasks: any;
+  setTasks: Dispatch<SetStateAction<Task[]>>;
   deleteTask: (task: Task) => void
 }
 

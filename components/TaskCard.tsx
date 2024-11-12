@@ -6,7 +6,7 @@ import { Trash2 } from "lucide-react";
 interface TaskCardProps {
   task: Task;
   index: number;
-  deleteTask: any;
+  deleteTask: (tak: Task) => void;
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ task, index, deleteTask }) => {
