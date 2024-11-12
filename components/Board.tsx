@@ -52,7 +52,6 @@ const Board: React.FC<BoardProps> = ({ initialTasks }) => {
       movedTask.completed = false;
     }
 
-    // Update status via API
     try {
       const response = await fetch(`/api/tasks/${movedTask.id}`, {
         method: 'PUT',
