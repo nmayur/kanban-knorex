@@ -8,3 +8,8 @@ export type Task = {
     inProgress: boolean | null;
     description: string;
 };
+
+export type Addtask = {
+    title: string;
+    description: string;
+}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Task } from "@/shared/types";
+import { Task, Addtask } from "@/shared/types";
 import dynamic from "next/dynamic";
 
 const Board = dynamic(() => import("@/components/Board"), {
@@ -28,8 +28,16 @@ export default function Home() {
     fetchTasks();
   }, []);
 
-  const addtask = (task: Task) => {
-    setTasks([...tasks, {...task, id: tasks.length + 1 }]);
+  const addtask = (task: Addtask) => {
+    const lastTask = tasks[tasks.length - 1]
+    const payload: Task = {
+      ...task, 
+      id: lastTask.id + 1,
+      completed: false,
+      inProgress: false,
+      userId: 1
+    }
+    setTasks([...tasks, payload]);
   }
 
   const deleteTask = (task: Task) => {

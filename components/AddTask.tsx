@@ -10,18 +10,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
-
-interface Task {
-  userId: number;
-  id: number;
-  title: string;
-  description: string;
-  completed: boolean;
-  inProgress: boolean;
-}
+import { Addtask } from "@/shared/types";
 
 interface AddTaskProps {
-  addNewTask: (task: Task) => void; // Function passed from parent to handle adding new task
+  addNewTask: (task: Addtask) => void; // Function passed from parent to handle adding new task
 }
 
 const AddTask: React.FC<AddTaskProps> = ({ addNewTask }) => {
@@ -33,13 +25,9 @@ const AddTask: React.FC<AddTaskProps> = ({ addNewTask }) => {
     e.preventDefault();
 
     // Create the new task with unique ID and default status
-    const newTask: Task = {
-      userId: 1, // Example static user ID, can be dynamic
+    const newTask: Addtask = {
       title,
-      id: 0,
       description,
-      completed: false,
-      inProgress: false,
     };
 
     // Pass the new task to the parent component
