@@ -75,7 +75,7 @@ const Board: React.FC<BoardProps> = ({ initialTasks }) => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex justify-between space-x-4">
+      <div className="flex justify-between lg:space-x-4 flex-wrap md:flex-nowrap">
         <Column title="To Do" columnId="todo" tasks={getTasksByColumn('todo')} />
         <Column title="In Progress" columnId="inProgress" tasks={getTasksByColumn('inProgress')} />
         <Column title="Completed" columnId="completed" tasks={getTasksByColumn('completed')} />

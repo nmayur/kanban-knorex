@@ -10,7 +10,7 @@ interface ColumnProps {
 }
 
 const Column: React.FC<ColumnProps> = ({ title, columnId, tasks }) => (
-    <div className="bg-gray-200 py-4 px-2 rounded w-full">
+    <div className="bg-gray-200 py-4 px-2 rounded w-full mb-5 lg:mb-0">
         <h2 className="text-lg font-semibold mb-4">{title}</h2>
         <Droppable droppableId={columnId}>
             {(provided) => (
