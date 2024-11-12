@@ -5,10 +5,24 @@ import { Task, ColumnType } from '@/shared/types';
 
 interface BoardProps {
   tasks: Task[];
-  updateTaskStatus: (task:Task ) => void
+  setTasks: any;
+  deleteTask: (task: Task) => void
 }
 
-const Board: React.FC<BoardProps> = ({ tasks, updateTaskStatus }) => {
+const Board: React.FC<BoardProps> = ({ tasks, setTasks }) => {
+
+  const updateTaskStatus = (task: Task) => {
+    const updatedTasks = tasks.map((t) =>
+      t.id === task.id ? { ...t, ...task } : t
+    );
+    setTasks(updatedTasks);
+    console.log("Task updated:", updatedTasks);
+  };
+
+  const deleteTask = (task: Task) => {
+    const updatedTasks = tasks.filter((each:Task) => each.id !== task.id);
+    setTasks(updatedTasks)
+  }
 
   // Function to get tasks based on their column status
   const getTasksByColumn = (columnId: ColumnType) => {
@@ -56,9 +70,9 @@ const Board: React.FC<BoardProps> = ({ tasks, updateTaskStatus }) => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex justify-between lg:space-x-4 flex-wrap md:flex-nowrap">
-        <Column title="To Do" columnId="todo" tasks={getTasksByColumn('todo')} />
-        <Column title="In Progress" columnId="inProgress" tasks={getTasksByColumn('inProgress')} />
-        <Column title="Completed" columnId="completed" tasks={getTasksByColumn('completed')} />
+        <Column title="To Do" columnId="todo" tasks={getTasksByColumn('todo')} setTasks={setTasks} deleteTask={deleteTask} />
+        <Column title="In Progress" columnId="inProgress" tasks={getTasksByColumn('inProgress')} setTasks={setTasks} deleteTask={deleteTask} />
+        <Column title="Completed" columnId="completed" tasks={getTasksByColumn('completed')} setTasks={setTasks} deleteTask={deleteTask} />
       </div>
     </DragDropContext>
   );

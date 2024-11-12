@@ -6,5 +6,5 @@ export const initialTasks = [
     { userId: 1, id: 5, title: "Design new homepage layout", completed: false, inProgress: true, description: "Create wireframes and propose design options for the new homepage." },
     { userId: 1, id: 6, title: "Review pull requests", completed: false, inProgress: false, description: "Check the submitted pull requests for code quality and functionality." },
     { userId: 1, id: 7, title: "Update the documentation", completed: false, inProgress: false, description: "Revise and update the technical documentation to reflect recent changes." },
-    { userId: 1, id: 8, title: "Plan the next sprint", completed: true, inProgress: true, description: "Collaborate with the team to define the goals and tasks for the next sprint cycle." },
+    { userId: 1, id: 8, title: "Plan the next sprint", completed: true, inProgress: false, description: "Collaborate with the team to define the goals and tasks for the next sprint cycle." },
 ];
