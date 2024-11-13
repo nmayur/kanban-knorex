@@ -12,10 +12,10 @@ interface propsI {
 const Board: React.FC<propsI> = ({ filteredTasks }) => {
   const dispatch = useAppDispatch();
 
+  let tasks = useAppSelector((state) => state.tasks.tasks);
+
   // if search filter is on show filtered tasks else from the store
-  const tasks = filteredTasks?.length
-    ? filteredTasks
-    : useAppSelector((state) => state.tasks.tasks);
+  tasks = filteredTasks?.length ? filteredTasks : tasks;
 
   // Function to get tasks based on their column status
   const getTasksByColumn = (columnId: ColumnType) => {
