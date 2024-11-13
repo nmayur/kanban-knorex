@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setTasks } from "@/store/taskSlice";
 import dynamic from "next/dynamic";
 import { Plus } from "lucide-react";
@@ -14,7 +14,16 @@ const AddTask = dynamic(() => import("@/components/AddTask"), {
 
 export default function Home() {
   const dispatch = useAppDispatch();
+  const tasks = useAppSelector((state) => state.tasks.tasks);
   const [openAddModal, setOpenAddModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Filter tasks based on the search query
+  const filteredTasks = tasks.filter(
+    (task) =>
+      task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      task.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -35,6 +44,15 @@ export default function Home() {
       <div className="lg:container mx-auto p-4">
         <div className="flex justify-between items-center gap-4 mb-6">
           <h1 className="text-2xl font-bold">Kanban Board</h1>
+          <div className="w-1/4">
+            <input
+              type="text"
+              className="p-2 border rounded w-full"
+              placeholder="Search tasks..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
           <button
             onClick={() => setOpenAddModal(true)}
             className="bg-blue-600 text-white font-semibold px-4 py-1 rounded-full flex items-center"
@@ -47,8 +65,7 @@ export default function Home() {
           <AddTask openModal={openAddModal} setOpenModal={setOpenAddModal} />
         )}
 
-        
-        <Board />
+        <Board filteredTasks={filteredTasks} />
       </div>
     </div>
   );

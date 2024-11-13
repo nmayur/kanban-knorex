@@ -1,13 +1,21 @@
-import React from 'react';
-import { DragDropContext, DropResult } from '@hello-pangea/dnd';
-import Column from './Column';
-import { Task, ColumnType } from '@/shared/types';
+import React from "react";
+import { DragDropContext, DropResult } from "@hello-pangea/dnd";
+import Column from "./Column";
+import { Task, ColumnType } from "@/shared/types";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { updateTask } from "@/store/taskSlice";
 
-const Board: React.FC = () => {
+interface propsI {
+  filteredTasks: Task[];
+}
+
+const Board: React.FC<propsI> = ({ filteredTasks }) => {
   const dispatch = useAppDispatch();
-  const tasks = useAppSelector((state) => state.tasks.tasks);
+
+  // if search filter is on show filtered tasks else from the store
+  const tasks = filteredTasks?.length
+    ? filteredTasks
+    : useAppSelector((state) => state.tasks.tasks);
 
   // Function to get tasks based on their column status
   const getTasksByColumn = (columnId: ColumnType) => {
@@ -24,7 +32,11 @@ const Board: React.FC = () => {
   const onDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result;
     if (!destination) return;
-    if (source.droppableId === destination.droppableId && source.index === destination.index) return;
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    )
+      return;
 
     // Find the task that was dragged
     const movedTask = tasks.find((task) => task.id === Number(draggableId));
@@ -42,9 +54,21 @@ const Board: React.FC = () => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex justify-between lg:space-x-4 flex-wrap md:flex-nowrap">
-        <Column title="To Do" columnId="todo" tasks={getTasksByColumn('todo')} />
-        <Column title="In Progress" columnId="inProgress" tasks={getTasksByColumn('inProgress')} />
-        <Column title="Completed" columnId="completed" tasks={getTasksByColumn('completed')} />
+        <Column
+          title="To Do"
+          columnId="todo"
+          tasks={getTasksByColumn("todo")}
+        />
+        <Column
+          title="In Progress"
+          columnId="inProgress"
+          tasks={getTasksByColumn("inProgress")}
+        />
+        <Column
+          title="Completed"
+          columnId="completed"
+          tasks={getTasksByColumn("completed")}
+        />
       </div>
     </DragDropContext>
   );
