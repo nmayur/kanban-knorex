@@ -44,15 +44,6 @@ export default function Home() {
       <div className="lg:container mx-auto p-4">
         <div className="flex justify-between items-center gap-4 mb-6">
           <h1 className="text-2xl font-bold">Kanban Board</h1>
-          <div className="w-1/4">
-            <input
-              type="text"
-              className="p-2 border rounded w-full"
-              placeholder="Search tasks..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
           <button
             onClick={() => setOpenAddModal(true)}
             className="bg-blue-600 text-white font-semibold px-4 py-1 rounded-full flex items-center"
@@ -64,6 +55,16 @@ export default function Home() {
         {openAddModal && (
           <AddTask openModal={openAddModal} setOpenModal={setOpenAddModal} />
         )}
+
+        <div className="md:w-1/2 w-full mb-3">
+          <input
+            type="text"
+            className="p-2 border-2 rounded-md w-full"
+            placeholder="Search tasks..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
 
         <Board filteredTasks={filteredTasks} />
       </div>
