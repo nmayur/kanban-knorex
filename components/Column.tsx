@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import { Droppable } from '@hello-pangea/dnd';
 import TaskCard from './TaskCard';
 import { Task, ColumnType } from '@/shared/types';
@@ -7,11 +7,9 @@ interface ColumnProps {
     title: string;
     columnId: ColumnType;
     tasks: Task[];
-    setTasks: Dispatch<SetStateAction<Task[]>>;
-    deleteTask: (task: Task) => void
 }
 
-const Column: React.FC<ColumnProps> = ({ title, columnId, tasks, deleteTask }) => (
+const Column: React.FC<ColumnProps> = ({ title, columnId, tasks }) => (
     <div className="bg-gray-200 py-4 px-2 rounded w-full mb-5 lg:mb-0">
         <h2 className="text-lg font-semibold mb-4">{title}</h2>
         <Droppable droppableId={columnId}>
@@ -22,7 +20,7 @@ const Column: React.FC<ColumnProps> = ({ title, columnId, tasks, deleteTask }) =
                     className="min-h-[300px] p-2 bg-gray-100 rounded"
                 >
                     {tasks.map((task, index) => (
-                        <TaskCard key={task.id} task={task} index={index} deleteTask={deleteTask} />
+                        <TaskCard key={task.id} task={task} index={index} />
                     ))}
                     {provided.placeholder}
                 </div>

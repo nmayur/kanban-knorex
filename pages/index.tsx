@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
-import { Task, Addtask } from "@/shared/types";
+import { useAppDispatch } from "@/store/hooks";
+import { setTasks } from "@/store/taskSlice";
 import dynamic from "next/dynamic";
+import { Plus } from "lucide-react";
 
 const Board = dynamic(() => import("@/components/Board"), {
   ssr: false,
@@ -11,48 +13,42 @@ const AddTask = dynamic(() => import("@/components/AddTask"), {
 });
 
 export default function Home() {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const dispatch = useAppDispatch();
+  const [openAddModal, setOpenAddModal] = useState(false);
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
         const response = await fetch("/api/tasks");
-
         const data = await response.json();
-        setTasks(data);
+        dispatch(setTasks(data));
       } catch (error) {
         console.error("Error fetching tasks:", error);
       }
     };
 
     fetchTasks();
-  }, []);
-
-  const addtask = (task: Addtask) => {
-    const lastTask = tasks[tasks.length - 1]
-    const payload: Task = {
-      ...task, 
-      id: lastTask.id + 1,
-      completed: false,
-      inProgress: false,
-      userId: 1
-    }
-    setTasks([...tasks, payload]);
-  }
-
-  const deleteTask = (task: Task) => {
-    const updatedTasks = tasks.filter((each:Task) => each.id !== task.id);
-    setTasks(updatedTasks)
-  }
+  }, [dispatch]);
 
   return (
     <div>
       <div className="lg:container mx-auto p-4">
         <div className="flex justify-between items-center gap-4 mb-6">
           <h1 className="text-2xl font-bold">Kanban Board</h1>
-          <AddTask addNewTask={addtask} />
+          <button
+            onClick={() => setOpenAddModal(true)}
+            className="bg-blue-600 text-white font-semibold px-4 py-1 rounded-full flex items-center"
+          >
+            <Plus size={18} className="mr-2" /> Add Task
+          </button>
         </div>
-        <Board tasks={tasks} setTasks={setTasks} deleteTask={deleteTask} />
+
+        {openAddModal && (
+          <AddTask openModal={openAddModal} setOpenModal={setOpenAddModal} />
+        )}
+
+        
+        <Board />
       </div>
     </div>
   );

@@ -1,78 +1,50 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import Column from './Column';
 import { Task, ColumnType } from '@/shared/types';
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { updateTask } from "@/store/taskSlice";
 
-interface BoardProps {
-  tasks: Task[];
-  setTasks: Dispatch<SetStateAction<Task[]>>;
-  deleteTask: (task: Task) => void
-}
-
-const Board: React.FC<BoardProps> = ({ tasks, setTasks }) => {
-
-  const updateTaskStatus = (task: Task) => {
-    const updatedTasks = tasks.map((t) =>
-      t.id === task.id ? { ...t, ...task } : t
-    );
-    setTasks(updatedTasks);
-    console.log("Task updated:", updatedTasks);
-  };
-
-  const deleteTask = (task: Task) => {
-    const updatedTasks = tasks.filter((each:Task) => each.id !== task.id);
-    setTasks(updatedTasks)
-  }
+const Board: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const tasks = useAppSelector((state) => state.tasks.tasks);
 
   // Function to get tasks based on their column status
   const getTasksByColumn = (columnId: ColumnType) => {
     return tasks.filter((task) =>
-      columnId === 'todo'
-        ? !task.completed && !task.inProgress 
-        : columnId === 'inProgress'
-        ? task.inProgress 
-        : columnId === 'completed' && task.completed
+      columnId === "todo"
+        ? !task.completed && !task.inProgress
+        : columnId === "inProgress"
+        ? task.inProgress
+        : columnId === "completed" && task.completed
     );
   };
 
   // Handle the drag and drop logic
-  const onDragEnd = async (result: DropResult) => {
+  const onDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result;
     if (!destination) return;
-    if (source.droppableId === destination.droppableId && source.index === destination.index) {
-      return;
-    }
-  
+    if (source.droppableId === destination.droppableId && source.index === destination.index) return;
+
     // Find the task that was dragged
-    const movedTask = tasks.find(task => task.id === Number(draggableId));
-  
+    const movedTask = tasks.find((task) => task.id === Number(draggableId));
     if (!movedTask) return;
-  
-    let newStatus: 'completed' | 'inProgress' | 'todo' = 'todo';
-    if (destination.droppableId === 'completed') {
-      newStatus = 'completed';
-      movedTask.completed = true;
-      movedTask.inProgress = false;
-    } else if (destination.droppableId === 'inProgress') {
-      newStatus = 'inProgress';
-      movedTask.inProgress = true;
-      movedTask.completed = false;
-    } else {
-      newStatus = 'todo';
-      movedTask.inProgress = false;
-      movedTask.completed = false;
-    }
-  
-    // Pass updated task to the parent to update the state
-    updateTaskStatus(movedTask);
+
+    const updatedTask: Task = {
+      ...movedTask,
+      completed: destination.droppableId === "completed",
+      inProgress: destination.droppableId === "inProgress",
+    };
+
+    dispatch(updateTask(updatedTask));
   };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex justify-between lg:space-x-4 flex-wrap md:flex-nowrap">
-        <Column title="To Do" columnId="todo" tasks={getTasksByColumn('todo')} setTasks={setTasks} deleteTask={deleteTask} />
-        <Column title="In Progress" columnId="inProgress" tasks={getTasksByColumn('inProgress')} setTasks={setTasks} deleteTask={deleteTask} />
-        <Column title="Completed" columnId="completed" tasks={getTasksByColumn('completed')} setTasks={setTasks} deleteTask={deleteTask} />
+        <Column title="To Do" columnId="todo" tasks={getTasksByColumn('todo')} />
+        <Column title="In Progress" columnId="inProgress" tasks={getTasksByColumn('inProgress')} />
+        <Column title="Completed" columnId="completed" tasks={getTasksByColumn('completed')} />
       </div>
     </DragDropContext>
   );

@@ -12,4 +12,6 @@ export type Task = {
 export type Addtask = {
     title: string;
     description: string;
+    completed: boolean;
+    inProgress: boolean;
 }

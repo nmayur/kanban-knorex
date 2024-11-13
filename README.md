@@ -12,6 +12,7 @@ You can view the live demo of the project at https://kanban-knorex.vercel.app/.
 - **TypeScript** for type safety and better development experience
 - **API routes** for handling some dummy data instead of using external placeholder APIs
 - **@hello-pangea/dnd** for drag-and-drop functionality
+- **redux** for global state management and to avoid prop drilling
 
 ## Getting Started
 
